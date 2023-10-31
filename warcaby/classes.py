@@ -26,10 +26,25 @@ class Warcaby:
         pass
 
     def crator(self):
-        a, b, c = [[0 if (i + j) % 2 else 1 for i in range(9)] for j in range(3)]
-        f, g, h = [[2 if (i + j) % 2 else 0 for i in range(9)] for j in range(3)]
-        d, e = [[0 for x in range(9)] for x in range(2)]
+        a, b, c = [[0 if (i + j) % 2 else 1 for i in range(8)] for j in range(3)]
+        f, g, h = [[2 if (i + j) % 2 else 0 for i in range(8)] for j in range(3)]
+        d, e = [[0 for x in range(8)] for x in range(2)]
+        k = ["1", "2", "3", "4", "5", "6", "7", "8"]
+        print("   " + "  ".join(k))
+        print("   " + "-----------------------")
+        z = [
+            ("A", a),
+            ("B", b),
+            ("C", c),
+            ("D", d),
+            ("E", e),
+            ("F", f),
+            ("G", g),
+            ("H", h),
+        ]
+        for variable, value in z:
+            print(variable, value)
 
-        z = [a, b, c, d, e, f, g, h]
-        for row in z:
-            print(row)
+        # z = [a, b, c, d, e, f, g, h]
+        # for row in z:
+        #     print("a", row)
