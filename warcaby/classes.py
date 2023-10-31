@@ -33,8 +33,3 @@ class Warcaby:
         z = [a, b, c, d, e, f, g, h]
         for row in z:
             print(row)
-
-
-gra = Warcaby()
-
-gra.crator()
