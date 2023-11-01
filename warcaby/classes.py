@@ -29,6 +29,7 @@ class Warcaby:
         a, b, c = [[0 if (i + j) % 2 else 1 for i in range(8)] for j in range(3)]
         f, g, h = [[2 if (i + j) % 2 else 0 for i in range(8)] for j in range(3)]
         d, e = [[0 for x in range(8)] for x in range(2)]
+        pool = [a, b, c, d, e, f, g, h]
         k = ["1", "2", "3", "4", "5", "6", "7", "8"]
         print("   " + "  ".join(k))
         print("   " + "-----------------------")
@@ -44,7 +45,30 @@ class Warcaby:
         ]
         for variable, value in z:
             print(variable, value)
+        return pool
 
         # z = [a, b, c, d, e, f, g, h]
         # for row in z:
         #     print("a", row)
+
+    def get_coordinats(self):
+        print("Podaj wspolrzedne pionka!")
+        horizontal = input("rząd: ")
+        vertical = int(input("kolumna: "))
+        return horizontal, vertical
+
+    def set_coordinats(self):
+        pass
+
+        # tak określona wartość w list zmienia sie na zero, a wartosc okreslona w funkcji set_coordinats zmienia sie na 1 lub 2
+
+    # po wykonaniu bicia odbywa się liczenie pozostałych pionkow i wyswietlenie aktualnego stanu
+
+    def move(self):
+        pass
+
+    def board(self):
+        self.pool
+        # tworzenie nowego widoku planszy: get_coordinats i set i zmiana wartości w dwóch listach
+        # Może utworzyć osobną klase Board i po utworzniu master i wyświetleniu na początku wyciągać z niej wiersze (listy), aby potem je modyfikować i tworzyć z nich zaktualizowane widoki planszy
+        pass
