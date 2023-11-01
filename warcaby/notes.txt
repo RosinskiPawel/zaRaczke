@@ -1,0 +1,7 @@
+nowa koncepcja:
+utworzyc planszę ręcznie
+board = [[], [], []...]
+i działać na indeksach
+po każdej operacji plansza bedzie wyswietlana ze zmienionymi 
+wartosciami
+TO jEST PROSTE ROZWIAZANIE. najprostsze

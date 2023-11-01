@@ -72,3 +72,9 @@ class Warcaby:
         # tworzenie nowego widoku planszy: get_coordinats i set i zmiana wartości w dwóch listach
         # Może utworzyć osobną klase Board i po utworzniu master i wyświetleniu na początku wyciągać z niej wiersze (listy), aby potem je modyfikować i tworzyć z nich zaktualizowane widoki planszy
         pass
+
+
+# jeżeli wybrae pole jest zajeta -> blad i powtorka
+# gdy jest wolne, to pole w rzad+1 i kolumna+1 zmienia wartosc na zero,a pionek przechodzi na wybrane pole i ono zmienia wartosc na wart pionka
+# jezeli wybrane pole ma kolumne wieksza od pola aktualnego pionk, to pole w rzad+1 i kolumna+1 zmienia wartosc na zero, a gdy ma kolumne mniejsza, to pole w rzad+1, ale kolumna-1 zmienia wartosc na zero
+# gdy wybrane zostanie nowe pole o wartosciach rzad+1 i kol+1, to nie ma bicia i jest zwykły ruchu, zbijanie jest wowczas, gdy nowe współrzędnie mają obie wartości zwiększone/zmniejszone o '2'!!!
