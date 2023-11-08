@@ -23,39 +23,72 @@
 #     print(row)
 class Warcaby:
     def __init__(self):
-        pass
+        self.board = [
+            [1, 0, 1, 0, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0, 1, 0, 1],
+            [1, 0, 1, 0, 1, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 2, 0, 2, 0, 2, 0, 2],
+            [2, 0, 2, 0, 2, 0, 2, 0],
+            [0, 2, 0, 2, 0, 2, 0, 2],
+        ]
 
-    def crator(self):
-        a, b, c = [[0 if (i + j) % 2 else 1 for i in range(8)] for j in range(3)]
-        f, g, h = [[2 if (i + j) % 2 else 0 for i in range(8)] for j in range(3)]
-        d, e = [[0 for x in range(8)] for x in range(2)]
-        pool = [a, b, c, d, e, f, g, h]
+    # def crator(self):
+    #     a, b, c = [[0 if (i + j) % 2 else 1 for i in range(8)] for j in range(3)]
+    #     f, g, h = [[2 if (i + j) % 2 else 0 for i in range(8)] for j in range(3)]
+    #     d, e = [[0 for x in range(8)] for x in range(2)]
+    #     pool = [a, b, c, d, e, f, g, h]
+    #     k = ["1", "2", "3", "4", "5", "6", "7", "8"]
+    #     print("   " + "  ".join(k))
+    #     print("   " + "-----------------------")
+    #     z = [
+    #         ("A", a),
+    #         ("B", b),
+    #         ("C", c),
+    #         ("D", d),
+    #         ("E", e),
+    #         ("F", f),
+    #         ("G", g),
+    #         ("H", h),
+    #     ]
+    #     for variable, value in z:
+    #         print(variable, value)
+    #     return pool
+
+    # z = [a, b, c, d, e, f, g, h]
+    # for row in z:
+    #     print("a", row)
+
+    def view(self):
+        z = [
+            ("A", self.board[0]),
+            ("B", self.board[1]),
+            ("C", self.board[2]),
+            ("D", self.board[3]),
+            ("E", self.board[4]),
+            ("F", self.board[5]),
+            ("G", self.board[6]),
+            ("H", self.board[7]),
+        ]
         k = ["1", "2", "3", "4", "5", "6", "7", "8"]
         print("   " + "  ".join(k))
         print("   " + "-----------------------")
-        z = [
-            ("A", a),
-            ("B", b),
-            ("C", c),
-            ("D", d),
-            ("E", e),
-            ("F", f),
-            ("G", g),
-            ("H", h),
-        ]
         for variable, value in z:
             print(variable, value)
-        return pool
 
-        # z = [a, b, c, d, e, f, g, h]
-        # for row in z:
-        #     print("a", row)
+    def get_hor(self):
+        letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+        horizontal = input("podaj rząd: ")
+        if horizontal in letters:
+            return letters.index(horizontal)
 
-    def get_coordinats(self):
-        print("Podaj wspolrzedne pionka!")
-        horizontal = input("rząd: ")
-        vertical = int(input("kolumna: "))
-        return horizontal, vertical
+    def get_vert(self):
+        vertical = int(input("Podaj kolumnę: "))
+        return vertical - 1
+
+    def get_koord(self):
+        return self.board[get]
 
     def set_coordinats(self):
         pass
