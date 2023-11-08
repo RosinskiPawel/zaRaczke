@@ -72,10 +72,10 @@ class Warcaby:
             ("H", self.board[7]),
         ]
         k = ["1", "2", "3", "4", "5", "6", "7", "8"]
-        print("   " + "  ".join(k))
-        print("   " + "-----------------------")
+        print("    " + " ".join(k))
+        print("   " + "-----------------")
         for variable, value in z:
-            print(variable, value)
+            print(variable, "[", *value, "]")
 
     # def get_hor(self):
     #     letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
@@ -101,6 +101,7 @@ class Warcaby:
         # wartosc na nowym miejscu zmienia się na wartość pionka pobranego/chwyconego wyzej
         self.board[letters.index(set_h)][set_v - 1] = pionek
         # return self.board
+        print()
         self.view()
 
         # TODO 1) obsługa błędów (pole zajęte, za duży skok, wyjście poza zasięg tablicy)
