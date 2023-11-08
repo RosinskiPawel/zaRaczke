@@ -77,34 +77,38 @@ class Warcaby:
         for variable, value in z:
             print(variable, value)
 
-    def get_hor(self):
-        letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        horizontal = input("podaj rząd: ")
-        if horizontal in letters:
-            return letters.index(horizontal)
+    # def get_hor(self):
+    #     letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+    #     horizontal = input("podaj rząd: ")
+    #     if horizontal in letters:
+    #         return letters.index(horizontal)
 
-    def get_vert(self):
-        vertical = int(input("Podaj kolumnę: "))
-        return vertical - 1
-
-    def get_koord(self):
-        return self.board[get]
-
-    def set_coordinats(self):
-        pass
-
-        # tak określona wartość w list zmienia sie na zero, a wartosc okreslona w funkcji set_coordinats zmienia sie na 1 lub 2
-
-    # po wykonaniu bicia odbywa się liczenie pozostałych pionkow i wyswietlenie aktualnego stanu
+    # def get_vert(self):
+    #     vertical = int(input("Podaj kolumnę: "))
+    #     return vertical - 1
 
     def move(self):
-        pass
+        letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+        # ustalamy pionek do przeniesienia
+        get_h = input("podaj rząd: ")
+        get_v = int(input("Podaj kolumnę: "))
+        # pionek w przypadku gracza pierwsze to '1', a drugiego to '2' zostaje pobrany/chwycony i jego pole jest puste i zmienia teraz wartość na '0', ale wartość pionek pozostaje niezmieniona i zostanie użyta w dalszej części
+        pionek = self.board[letters.index(get_h)][get_v - 1]
+        self.board[letters.index(get_h)][get_v - 1] = 0
+        # teraz ustalamy miejsce, na ktore przenosimy pobrany pionek ('1' lub '2')
+        set_h = input("podaj rząd docelowy: ")
+        set_v = int(input("Podaj kolumnę docelową: "))
+        # wartosc na nowym miejscu zmienia się na wartość pionka pobranego/chwyconego wyzej
+        self.board[letters.index(set_h)][set_v - 1] = pionek
+        # return self.board
+        self.view()
 
-    def board(self):
-        self.pool
-        # tworzenie nowego widoku planszy: get_coordinats i set i zmiana wartości w dwóch listach
-        # Może utworzyć osobną klase Board i po utworzniu master i wyświetleniu na początku wyciągać z niej wiersze (listy), aby potem je modyfikować i tworzyć z nich zaktualizowane widoki planszy
-        pass
+        # TODO 1) obsługa błędów (pole zajęte, za duży skok, wyjście poza zasięg tablicy)
+
+
+# może by tę funkcję rozbić na mniejsze - chyba bedzie konieczne, bo musi dojść jeszcz BICIE
+
+# po wykonaniu bicia odbywa się liczenie pozostałych pionkow i wyswietlenie aktualnego stanu
 
 
 # jeżeli wybrae pole jest zajeta -> blad i powtorka

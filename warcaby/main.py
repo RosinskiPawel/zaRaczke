@@ -8,12 +8,13 @@ def main():
     # print(gra.get_vert())
     # print(gra.get_hor())
     gra.view()
+    gra.move()
 
-    def get_koord():
-        j = gra.board[gra.get_hor()][gra.get_vert()]
-        print(j)
+    # def get_koord():
+    #     j = gra.board[gra.get_hor()][gra.get_vert()]
+    #     print(j)
 
-    get_koord()
+    # get_koord()
 
 
 if __name__ == "__main__":
