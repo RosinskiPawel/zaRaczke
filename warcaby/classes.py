@@ -33,6 +33,8 @@ class Warcaby:
             [2, 0, 2, 0, 2, 0, 2, 0],
             [0, 2, 0, 2, 0, 2, 0, 2],
         ]
+        self.scoreOne = 0
+        self.scoreTwo = 0
 
     # def crator(self):
     #     a, b, c = [[0 if (i + j) % 2 else 1 for i in range(8)] for j in range(3)]
@@ -88,21 +90,75 @@ class Warcaby:
     #     return vertical - 1
 
     def move(self):
-        letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
-        # ustalamy pionek do przeniesienia
-        get_h = input("podaj rząd: ")
-        get_v = int(input("Podaj kolumnę: "))
-        # pionek w przypadku gracza pierwsze to '1', a drugiego to '2' zostaje pobrany/chwycony i jego pole jest puste i zmienia teraz wartość na '0', ale wartość pionek pozostaje niezmieniona i zostanie użyta w dalszej części
-        pionek = self.board[letters.index(get_h)][get_v - 1]
-        self.board[letters.index(get_h)][get_v - 1] = 0
-        # teraz ustalamy miejsce, na ktore przenosimy pobrany pionek ('1' lub '2')
-        set_h = input("podaj rząd docelowy: ")
-        set_v = int(input("Podaj kolumnę docelową: "))
-        # wartosc na nowym miejscu zmienia się na wartość pionka pobranego/chwyconego wyzej
-        self.board[letters.index(set_h)][set_v - 1] = pionek
-        # return self.board
-        print()
-        self.view()
+        while True:
+            letters = ["a", "b", "c", "d", "e", "f", "g", "h"]
+
+            # ustalamy pionek do przeniesienia
+            while True:
+                try:
+                    get_h = input("podaj rząd: ")
+                    get_v = int(input("Podaj kolumnę: "))
+                    # pionek w przypadku gracza pierwsze to '1', a drugiego to '2' zostaje pobrany/chwycony i jego pole jest puste i zmienia teraz wartość na '0', ale wartość pionek pozostaje niezmieniona i zostanie użyta w dalszej części
+                    if get_h in letters or get_v in range(1, 9):
+                        break
+                    else:
+                        print("błędna wartości")
+                except ValueError:
+                    print("spróuj ponownie")
+
+            pionek = self.board[letters.index(get_h)][get_v - 1]
+
+            self.board[letters.index(get_h)][get_v - 1] = 0
+            # teraz ustalamy miejsce, na ktore przenosimy pobrany pionek ('1' lub '2')
+            set_h = input("podaj rząd docelowy: ")
+            set_v = int(input("Podaj kolumnę docelową: "))
+            # wartosc na nowym miejscu zmienia się na wartość pionka pobranego/chwyconego wyzej
+
+            # ZBIJANIE!!!!
+            if (
+                get_v - set_v == -2
+                and letters.index(get_h) - letters.index(set_h) == -2
+            ):
+                self.board[letters.index(get_h) + 1][get_v] = 0
+            elif (
+                get_v - set_v == 2 and letters.index(get_h) - letters.index(set_h) == -2
+            ):
+                self.board[letters.index(get_h) + 1][get_v - 2] = 0
+            elif (
+                get_v - set_v == 2 and letters.index(get_h) - letters.index(set_h) == 2
+            ):
+                self.board[letters.index(get_h) - 1][get_v - 2] = 0
+            elif (
+                get_v - set_v == -2 and letters.index(get_h) - letters.index(set_h) == 2
+            ):
+                self.board[letters.index(get_h) - 1][get_v] = 0
+
+            if abs(get_v - set_v) == 2 and pionek == 1:
+                self.scoreOne += 1
+            elif abs(get_v - set_v) == 2 and pionek == 2:
+                self.scoreTwo += 1
+
+            self.board[letters.index(set_h)][set_v - 1] = pionek
+
+            #     self.board[letters.index(set_h) + 1][set_v - 1] = 0
+            # else:
+            #     self.board[letters.index(get_h) + 1][get_v + 1] = 0
+
+            # if abs(set_v - get_v) == 2, to jest bicie !!!!!
+            # pionek do zbicia jest na self.board[letters.index(set_h)-1][set_v-/+1] minus 1 jesli (set_v - get_v) hest ujemne lub plus jeden jesli (set_v - get_v) jest dodatnie
+
+            print()
+            self.view()
+            print(f"Gracz 1 ma {self.scoreOne}. Gracz 2 ma {self.scoreTwo}")
+            if self.scoreOne == 12:
+                print("wygał gracz pierwszy")
+            elif self.scoreTwo == 12:
+                print("wybrał gracz drugi")
+                question = input("chcesz zagrać ponownie? (y/n)")
+                if question == "y":
+                    return True
+                else:
+                    break
 
         # TODO 1) obsługa błędów (pole zajęte, za duży skok, wyjście poza zasięg tablicy)
 
