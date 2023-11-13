@@ -88,10 +88,10 @@ class Warcaby:
             # zostaje umieszony pionek o określonej wyżej wartości 1 lub 2
             if pawn == 2 and letters.index(set_row) == 0:
                 self.board[0][set_col - 1] = 0
-                self.board[7][int(input("W której kolumnie umieścić pionek?")) - 1] = 2
+                self.board[7][int(input("W której kolumnie umieścić pionek? ")) - 1] = 2
             elif pawn == 1 and letters.index(set_row) == 7:
                 self.board[7][set_col - 1] = 0
-                self.board[0][int(input("W której kolumnie umieścić pionek?")) - 1] = 1
+                self.board[0][int(input("W której kolumnie umieścić pionek? ")) - 1] = 1
             else:
                 self.board[letters.index(set_row)][set_col - 1] = pawn
 
