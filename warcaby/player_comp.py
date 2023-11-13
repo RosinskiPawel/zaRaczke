@@ -10,9 +10,9 @@ board = [
     [1, 0, 1, 0, 1, 0, 1, 0],
     [0, 1, 0, 1, 0, 1, 0, 1],
     [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0],
-    [0, 2, 0, 2, 0, 2, 0, 2],
+    [0, 0, 0, 0, 0, 1, 0, 0],
+    [1, 0, 1, 0, 1, 0, 0, 0],
+    [0, 2, 0, 2, 0, 0, 0, 2],
     [2, 0, 2, 0, 2, 0, 2, 0],
     [0, 2, 0, 2, 0, 2, 0, 2],
 ]
@@ -38,8 +38,8 @@ for x in range(len(matches)):
         board[row][col] = 0
         break
     # ruch o jedno pole w prawo
-    elif board[row - 1][col + 1] == 0:
-        board[row - 1][col + 1] = 2
+    elif board[row - 1][col + (1 if col < 7 else 0)] == 0:
+        board[row - 1][col + (1 if col < 7 else 0)] = 2
         board[row][col] = 0
         break
     # elif board[row - 1][0] == 1 or board[row - 1][7] == 1:
@@ -53,13 +53,22 @@ for x in range(len(matches)):
     #     board[row][col] = 0
     #     break
     elif (
-        board[row - 1][col + (1 if col > 0 else -1)] == 1
-        and board[row - 2][col + (2 if col < 7 else -1)] == 0
+        board[row - 1][col + (1 if col < 7 else 0)] == 1
+        and board[row - 2][col + (2 if col < 7 else 0)] == 0
     ):
         board[row - 1][col + 1] = 0
         board[row - 2][col + 2] = 2
         board[row][col] = 0
         break
+    elif (
+        board[row - 1][col - (1 if col > 1 else 0)] == 1
+        and board[row - 2][col - (2 if col > 1 else 0)] == 0
+    ):
+        board[row - 1][col - 1] = 0
+        board[row - 2][col - 2] = 2
+        board[row][col] = 0
+        break
+
 
 for x in board:
     print(x)
