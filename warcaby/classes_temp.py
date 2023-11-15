@@ -1,4 +1,4 @@
-class Warcaby:
+class Board:
     def __init__(self):
         self.board = [
             [1, 0, 1, 0, 1, 0, 1, 0],
@@ -10,8 +10,6 @@ class Warcaby:
             [2, 0, 2, 0, 2, 0, 2, 0],
             [0, 2, 0, 2, 0, 2, 0, 2],
         ]
-        self.scoreOne = 0
-        self.scoreTwo = 0
 
     def view(self):
         z = [
@@ -29,6 +27,15 @@ class Warcaby:
         print("   " + "-----------------")
         for variable, value in z:
             print(variable, "[", *value, "]")
+
+
+board = Board()
+
+
+class Player:
+    def __init__(self, id, board):
+        self.id = id
+        self.board = board
 
     def move(self):
         player = 1
@@ -78,7 +85,7 @@ class Warcaby:
                         print("Błędna wartość")
                 except ValueError:
                     print("Błędna wartość, spróbuj ponownie")
-
+            self.board[letters.index(set_row)][set_col - 1] = pawn
             # gdy pionek dojdzie do końca planszy, wówczas powraca na początek
             # gdy przy pionku '2' indeks docleowego rzędu  wynosi 0, wówczas pionek dociera do końca planszy,
             # wartość w tym miejscu przyjmuje 0 i pojawia się pytanie do jakiej kolumny wstawić '2' w rzędzie H o indeksie 7
@@ -86,14 +93,9 @@ class Warcaby:
             # w przypadku pionka '1' zmieniają się tylko indeksy, zasada taka sama
             # gdy nie zachodzi żaden z obu warunków, w zwykłej sytuacji w wybrane miejsce na planszy
             # zostaje umieszony pionek o określonej wyżej wartości 1 lub 2
-            if pawn == 2 and letters.index(set_row) == 0:
-                self.board[0][set_col - 1] = 0
-                self.board[7][int(input("W której kolumnie umieścić pionek? ")) - 1] = 2
-            elif pawn == 1 and letters.index(set_row) == 7:
+            if pawn == 1 and letters.index(set_row) == 7:
                 self.board[7][set_col - 1] = 0
                 self.board[0][int(input("W której kolumnie umieścić pionek? ")) - 1] = 1
-            else:
-                self.board[letters.index(set_row)][set_col - 1] = pawn
 
             # ZBIJANIE!!!!
             # oto pierwotny kształt ustalania warunku bicia.
@@ -127,37 +129,57 @@ class Warcaby:
                 abs(get_col - set_col) == 2
                 and abs(letters.index(get_row) - letters.index(set_row)) == 2
             ):
-                row = letters.index(get_row) + (
-                    -1 if letters.index(get_row) > letters.index(set_row) else 1
-                )
-                col = set_col + (-2 if get_col < set_col else 0)
+                row = letters.index(get_row) + 1
+                col = set_col + (1 if get_col < set_col else -1)
                 self.board[row][col] = 0
 
-            # Dodawanie punktów
-            if abs(get_col - set_col) == 2 and pawn == 1:
-                self.scoreOne += 1
-            elif abs(get_col - set_col) == 2 and pawn == 2:
-                self.scoreTwo += 1
 
-            # określanie dostępnych pionków '2' dla ruchów komputera
-            matches = []
-            for index, row in enumerate(self.board):
-                for j, value in enumerate(row):
-                    if value == 2:
-                        matches.append((index, j))
+# self.scoreOne = 0
+# self.scoreTwo = 0
 
-            print()
-            self.view()
-            print(f"Gracz 1 ma {self.scoreOne}. Gracz 2 ma {self.scoreTwo}")
-            player += 1
 
-            # wygrywa gracz, który pierwszy zdobędzie 12 punktów
-            if self.scoreOne == 12:
-                print("Wygrał gracz pierwszy!")
-            elif self.scoreTwo == 12:
-                print("Wygrał gracz drugi!")
-                question = input("Chcesz zagrać ponownie? (y/n)")
-                if question == "y":
-                    return True
-                else:
-                    break
+class Computer(Player):
+    def move_comp(self):
+        # tworzenie listy z indeksami dostępnych pionków dla komputera (2)
+        matches = []
+        for index, row in enumerate(self.board):
+            for j, value in enumerate(row):
+                if value == 2:
+                    matches.append((index, j))
+        # iteracja, aby znalźć pierwszy dostępny pionek 2 i poniższej
+        # sprawdzanie warunków do wykonania ruchów oraz bicia
+        for x in range(len(matches)):
+            row = matches[x][0]
+            col = matches[x][1]
+            # ruch o jedno pole w lewo
+            if self.board[row - 1][col - 1] == 0:
+                self.board[row - 1][col - 1] = 2
+                self.board[row][col] = 0
+                break
+            # ruch o jedno pole w prawo
+            elif self.board[row - 1][col + (1 if col < 7 else 0)] == 0:
+                self.board[row - 1][col + (1 if col < 7 else 0)] = 2
+                self.board[row][col] = 0
+                break
+
+            # bicie w prawo
+            elif (
+                self.board[row - 1][col + (1 if col < 7 else 0)] == 1
+                and self.board[row - 2][col + (2 if col < 7 else 0)] == 0
+            ):
+                self.board[row - 1][col + 1] = 0
+                self.board[row - 2][col + 2] = 2
+                self.board[row][col] = 0
+                break
+            # bicie w lewo
+            elif (
+                self.board[row - 1][col - (1 if col > 1 else 0)] == 1
+                and self.board[row - 2][col - (2 if col > 1 else 0)] == 0
+            ):
+                self.board[row - 1][col - 1] = 0
+                self.board[row - 2][col - 2] = 2
+                self.board[row][col] = 0
+                break
+
+
+playerTwo = Computer(2)
