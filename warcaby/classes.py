@@ -93,9 +93,6 @@ class Player:
                                     abs(set_row - get_row) == 2
                                     and abs(set_col - get_col) == 2
                                 ):
-                                    #     0 < abs(set_row - get_row) < 3
-                                    #     and 0 < abs(set_col - get_col) < 3
-                                    # ):
                                     break
                                 else:
                                     print("Błędna kolumna lub rząd!")
