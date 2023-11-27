@@ -1,4 +1,5 @@
 from classes import *
+import keyboard
 
 
 def main():
@@ -42,6 +43,7 @@ def main():
             board1.view()
             computer.move_comp()
             print()
+
             if player1.score == 12:
                 print(f"Wygrał gracz {player1.id}")
                 return False

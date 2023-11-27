@@ -42,7 +42,6 @@ class Player:
     def getting_pawn(self):
         while True:
             print(f"Ruch gracza {self.id}")
-
             try:
                 get_row_letter = input("Podaj rząd: ").lower()
                 get_row = self.letters.index(get_row_letter)
@@ -83,7 +82,7 @@ class Player:
                             or set_row < get_row
                             and self.pawn == 2
                         ):
-                            # błąd z powodu wybrania takie samej kolumny
+                            # błąd z powodu wybrania takiej samej kolumny
                             if set_col != get_col:
                                 # błąd wybrania kolumny +2 przy wierszu +1 i na odwrót
                                 if (
