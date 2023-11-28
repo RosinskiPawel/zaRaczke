@@ -21,7 +21,7 @@ class Invoice:
 from PyPDF2 import PdfReader
 from pathlib import Path
 from datetime import datetime
-import pdfminer
+
 
 months = {"January": 1, "February": 2, "November": 11}
 
@@ -38,7 +38,7 @@ pageL = pageToWord.split("\n")
 # usuwanie pustych miejsc
 for el in pageL:
     pageL.remove(el) if el == " " else el
-# print(pageL)
+print(pageL)
 
 
 # # indeksy dla słow kluczowych
@@ -46,12 +46,18 @@ for el in pageL:
 projectPM_index = pageL.index("PROJEKTLEITER")
 projectNum_index = pageL.index("PROJEKTNUMMER")
 projectDate_index = pageL.index("LIEFERTERMIN")
-projectValue_index = pageL.index("Honorar") if "Honorar" in pageL else None
-
+# projectValue_index = pageL.index("Honorar")
+projValue = []
+# tu jest magia ;-) szuka el z końcówą "€", tworzy listę wartości, usuwa "€", zamienia ',' na '.' i tworzy ze stringów liczby zmiennoprzecinkowe, aby wyszukać największą, która jest sumą w euro na zamówieniu PO
+for el in pageL:
+    if el.endswith("€"):
+        projValue.append(float(el.removesuffix("€").replace(",", ".")))
+print(projValue)
 # wartości dla kluczy
 projectPM = pageL[projectPM_index + 1]
 projectNumber = pageL[projectNum_index + 1]
-projectValue = pageL[projectValue_index + 2]
+# projectValue = pageL[projectValue_index + 2]
+projectValue = max(projValue)
 
 projectDateTemp = pageL[projectDate_index + 1].split(", ")
 data_object = datetime.strptime(projectDateTemp[1], "%d. %B %Y")
