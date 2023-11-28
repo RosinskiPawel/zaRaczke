@@ -20,8 +20,10 @@ class Invoice:
 
 from PyPDF2 import PdfReader
 from pathlib import Path
-
+from datetime import datetime
 import pdfminer
+
+months = {"January": 1, "February": 2, "November": 11}
 
 # wczytuje plik pdf
 pdf_path = Path("C:/CODING/pdfToRead2.pdf")
@@ -30,30 +32,36 @@ pdf = PdfReader(str(pdf_path))
 first_page = pdf.pages[0]
 # konwertuje na tekst
 pageToWord = first_page.extract_text()
+
 # tekst ma wiele lini konca wiersza, więc tworzona jest lista z podziałem konca wiersza '\n'
 pageL = pageToWord.split("\n")
 # usuwanie pustych miejsc
-for i in pageL:
-    if i == " ":
-        pageL.remove(i)
-# for z in pageL:
-#     if z == "PROJEKTLEITER":
-#         print(pageL[pageL.index(z) + 1])
-# for z in pageL:
-#     if z == "Honorar":
-#         print(pageL[pageL.index(z) + 2])
+for el in pageL:
+    pageL.remove(el) if el == " " else el
+# print(pageL)
 
-# indeksy dla słow kluczowych
-pmName_index = pageL.index("PROJEKTLEITER") if "PROJEKTLEITER" in pageL else None
-projectNum_index = pageL.index("PROJEKTNUMMER") if "PROJEKTNUMMER" in pageL else None
+
+# # indeksy dla słow kluczowych
+
+projectPM_index = pageL.index("PROJEKTLEITER")
+projectNum_index = pageL.index("PROJEKTNUMMER")
+projectDate_index = pageL.index("LIEFERTERMIN")
 projectValue_index = pageL.index("Honorar") if "Honorar" in pageL else None
 
 # wartości dla kluczy
-pmName = pageL[pmName_index + 1]
+projectPM = pageL[projectPM_index + 1]
 projectNumber = pageL[projectNum_index + 1]
 projectValue = pageL[projectValue_index + 2]
 
-print(f"{projectNumber}; {pmName}; {projectValue}")
+projectDateTemp = pageL[projectDate_index + 1].split(", ")
+data_object = datetime.strptime(projectDateTemp[1], "%d. %B %Y")
+
+projectDate = data_object.strftime("%d.%m.%Y")
+
+
+print(
+    f"Nr projektu: {projectNumber}; PM: {projectPM}; data: {projectDate}, wartość {projectValue}"
+)
 
 
 # first = Invoice(122, 34, "DF", 23112023, 150)
