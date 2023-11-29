@@ -21,9 +21,34 @@ class Invoice:
 from PyPDF2 import PdfReader
 from pathlib import Path
 from datetime import datetime
+from tkinter import *
+from tkinter.filedialog import *
+from tkinter import messagebox
 
 
-months = {"January": 1, "February": 2, "November": 11}
+root = Tk()
+root.geometry("400x200")
+root.resizable(False, False)
+root.title("PDF PO to Excel")
+root.config(bg="#EEE9BF")
+
+lb = Label(root, text="Convert", bg="#EEE9BF", font=("Arial,15,bold"))
+lb.pack(pady=10)
+lb1 = Label(root, text="choose a file: ", bg="#EEE9BF", font=("Courier,15,bold"))
+lb1.place(x=10, y=58)
+
+filename2 = StringVar()
+Enl = Entry(root, width=30)
+Enl.place(x=160, y=65)
+
+btn1 = Button(root, text="Select", bg="#EEE9BF", font=("Courier,15,bold"))
+btn1.place(x=70, y=140)
+btn2 = Button(root, text="Convert", bg="#EEE9BF", font=("Courier,15,bold"))
+btn2.place(x=170, y=140)
+btn3 = Button(root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"))
+btn3.place(x=280, y=140)
+root.mainloop()
+
 
 # wczytuje plik pdf
 pdf_path = Path("C:/CODING/pdfToRead2.pdf")
@@ -59,9 +84,9 @@ projectNumber = pageL[projectNum_index + 1]
 # projectValue = pageL[projectValue_index + 2]
 projectValue = max(projValue)
 
+# modyfikcja zapisu daty
 projectDateTemp = pageL[projectDate_index + 1].split(", ")
 data_object = datetime.strptime(projectDateTemp[1], "%d. %B %Y")
-
 projectDate = data_object.strftime("%d.%m.%Y")
 
 
