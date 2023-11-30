@@ -3,32 +3,98 @@ from pathlib import Path
 from datetime import datetime
 from tkinter import *
 from tkinter import filedialog
-import os
 
 
-class Order:
-    def __init__(self, number, pm, date, value):
-        self.number = number
-        self.pm = pm
-        self.date = date
-        self.value = value
+class MyOrdersReader:
+    def __init__(self, root):
+        self.root = root
+        self.chosen_files = []
+
+        self.btn_open = Button(
+            root,
+            text="Select folder to open",
+            bg="#EEE9BF",
+            font=("Courier,15,bold"),
+            command=openFiles,
+        )
+        self.btn_open.pack()
+
+        self.btn2_save = Button(
+            root,
+            text="Select file to save",
+            bg="#EEE9BF",
+            font=("Courier,15,bold"),
+            command=fileToSaveIn,
+        )
+        self.btn2_save.pack()
+
+        self.btn3_convert = Button(
+            root,
+            text="Convert",
+            bg="#EEE9BF",
+            font=("Courier,15,bold"),
+            command=gettingFirstPages,
+        )
+        self.btn3_convert.pack()
+
+        self.btn4_exit = Button(
+            root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"), command=exit
+        )
+        self.btn4_exit.pack()
 
 
-def openkat():
-    chosenKat = filedialog.askdirectory()
+def openFiles():
+    chosen_files = filedialog.askopenfilenames(
+        defaultextension=".pdf",
+        filetypes=[("Pliki PDF", "*.pdf"), ("Wszystkie pliki", "*.*")],
+    )
+    return chosen_files
 
 
-def iterPoPlikach(funkcja):
-    for file in os.listdir(funkcja):
-        fullPath = os.path.join(funkcja, file)
+def gettingFirstPages(chosen_files):
+    list_pages = []
+    for file in chosen_files:
+        pdfPath = Path(file)
+        pdf_file = PdfReader(str(pdfPath))
+        main_page = pdf_file.pages[0]
+        converted_page = main_page.extract_text()
+        page_as_list = converted_page.split("\n")
+
+        for el in page_as_list:
+            page_as_list.remove(el) if el == " " else el
+            list_pages.append(page_as_list)
+    print(list_pages)
+
+
+# def extracting(list_pages):
+#     for page in list_pages:
+#         pm_index = page.index("PROJEKTLEITER")
+#         num_index = page.index("PROJEKTNUMMER")
+#         date_index = page.index("LIEFERTERMIN")
+
+#     pm = page[pm_index + 1]
+#     num = page[num_index+1]
+#     value = max(proj_value)
+
+
+def extracting_value(list_pages):
+    proj_value = []
+    for page in list_pages:
+        for el in page:
+            if el.endswith("€"):
+                proj_value.append(float(el.removesuffix("€").replace(",", ".")))
+    return proj_value
+
 
 def fileToSaveIn(output):
-    fileName = filedialog.askopenfilename(defaultextension="xls")
+    fileName = filedialog.askopenfilename(
+        defaultextension="xls",
+        filetypes=[("Pliki arkusza", "*.xls"), ("Wszystkie pliki", "*.*")],
+    )
     with open(fileName, "w") as file:
         file.write(output)
         print(f"dane zostały zapisane w plik {fileName}")
-        
-     
+
 
 root = Tk()
 root.geometry("500x300")
@@ -42,20 +108,37 @@ lb.pack(pady=10)
 # jeszcze muszę utworzyć przycisk do wyboru pliku Excel, w którym ma zostać zapisany wynik
 
 btn1 = Button(
-    root, text="Select folder to open", bg="#EEE9BF", font=("Courier,15,bold"), command=openkat
+    root,
+    text="Select folder to open",
+    bg="#EEE9BF",
+    font=("Courier,15,bold"),
+    command=openFiles,
 )
-btn1.place(x=40, y=140)
-btn2=Button(root, text="Select a file to save", bg="#EEE9BF", font=("Courier,15,bold"), command=)
+btn1.place(x=140, y=70)
+btn2 = Button(
+    root,
+    text="Select file to save",
+    bg="#EEE9BF",
+    font=("Courier,15,bold"),
+    command=fileToSaveIn,
+)
+btn2.place(x=140, y=120)
 
-btn3 = Button(root, text="Convert", bg="#EEE9BF", font=("Courier,15,bold"))
-btn3.place(x=180, y=140)
+btn3 = Button(
+    root,
+    text="Convert",
+    bg="#EEE9BF",
+    font=("Courier,15,bold"),
+    command=gettingFirstPages,
+)
+btn3.place(x=140, y=200)
 btn4 = Button(root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"), command=exit)
-btn4.place(x=275, y=140)
+btn4.place(x=145, y=250)
 root.mainloop()
 
 
-def exit():
-    root.destroy()
+def exit(self):
+    self.root.destroy()
 
 
 # wczytuje plik pdf
