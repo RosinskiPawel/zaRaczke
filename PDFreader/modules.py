@@ -22,9 +22,16 @@ def iterPoPlikach(funkcja):
     for file in os.listdir(funkcja):
         fullPath = os.path.join(funkcja, file)
 
+def fileToSaveIn(output):
+    fileName = filedialog.askopenfilename(defaultextension="xls")
+    with open(fileName, "w") as file:
+        file.write(output)
+        print(f"dane zostały zapisane w plik {fileName}")
+        
+     
 
 root = Tk()
-root.geometry("400x200")
+root.geometry("500x300")
 root.resizable(False, False)
 root.title("PDF to Excel")
 root.config(bg="#EEE9BF")
@@ -35,13 +42,15 @@ lb.pack(pady=10)
 # jeszcze muszę utworzyć przycisk do wyboru pliku Excel, w którym ma zostać zapisany wynik
 
 btn1 = Button(
-    root, text="Select folder", bg="#EEE9BF", font=("Courier,15,bold"), command=openkat
+    root, text="Select folder to open", bg="#EEE9BF", font=("Courier,15,bold"), command=openkat
 )
 btn1.place(x=40, y=140)
-btn2 = Button(root, text="Convert", bg="#EEE9BF", font=("Courier,15,bold"))
-btn2.place(x=180, y=140)
-btn3 = Button(root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"), command=exit)
-btn3.place(x=275, y=140)
+btn2=Button(root, text="Select a file to save", bg="#EEE9BF", font=("Courier,15,bold"), command=)
+
+btn3 = Button(root, text="Convert", bg="#EEE9BF", font=("Courier,15,bold"))
+btn3.place(x=180, y=140)
+btn4 = Button(root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"), command=exit)
+btn4.place(x=275, y=140)
 root.mainloop()
 
 
