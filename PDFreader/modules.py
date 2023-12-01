@@ -83,35 +83,42 @@ class MyOrdersReader:
         return self.list_pages
 
     def converting(self):
+        pure_info = []
         for page in self.list_pages:
-            self.extracting_pm(page)
-            self.extracting_num(page)
-            self.extracting_data(page)
-            self.extracting_value(page)
+            temp_list = []
+            results = [
+                self.extracting_num(page),
+                self.extracting_pm(page),
+                self.extracting_data(page),
+                self.extracting_value(page),
+            ]
+            temp_list.extend(results)
+            pure_info.append(temp_list)
+        print(pure_info)
 
     def extracting_pm(self, page):
         pm_index = page.index("PROJEKTLEITER")
         pm = page[pm_index + 1]
-        print(pm)
+        return pm
 
     def extracting_num(self, page):
         num_index = page.index("PROJEKTNUMMER")
         num = page[num_index + 1]
-        print(num)
+        return num
 
     def extracting_data(self, page):
         date_index = page.index("LIEFERTERMIN")
         projectDateTemp = page[date_index + 1].split(", ")
         data_object = datetime.strptime(projectDateTemp[1], "%d. %B %Y")
         projectDate = data_object.strftime("%d.%m.%Y")
-        print(projectDate)
+        return projectDate
 
     def extracting_value(self, page):
         proj_value = []
         for el in page:
             if el.endswith("€"):
                 proj_value.append(float(el.removesuffix("€").replace(",", ".")))
-        print(max(proj_value))
+        return max(proj_value)
 
     # def extracting_value(self):
     #     proj_value = []
