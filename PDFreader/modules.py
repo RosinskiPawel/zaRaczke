@@ -3,16 +3,20 @@ from pathlib import Path
 from datetime import datetime
 from tkinter import *
 from tkinter import filedialog
+import locale
+
+locale.setlocale(locale.LC_TIME, "de_DE")
+
+# import openpyxl
+# from openpyxl import Workbook
 
 
 class MyOrdersReader:
-    # def __init__(self):
-    #     self.list_pages = []
-
     def __init__(self, root):
         self.root = root
         self.chosen_files = []
         self.list_pages = []
+        self.pure_info = []
 
         self.btn_open = Button(
             root,
@@ -83,7 +87,6 @@ class MyOrdersReader:
         return self.list_pages
 
     def converting(self):
-        pure_info = []
         for page in self.list_pages:
             temp_list = []
             results = [
@@ -93,8 +96,8 @@ class MyOrdersReader:
                 self.extracting_value(page),
             ]
             temp_list.extend(results)
-            pure_info.append(temp_list)
-        print(pure_info)
+            self.pure_info.append(temp_list)
+        return self.pure_info
 
     def extracting_pm(self, page):
         pm_index = page.index("PROJEKTLEITER")
@@ -128,13 +131,13 @@ class MyOrdersReader:
     #                 proj_value.append(float(el.removesuffix("€").replace(",", ".")))
     #     return proj_value
 
-    def fileToSaveIn(output):
+    def fileToSaveIn(self):
         fileName = filedialog.askopenfilename(
-            defaultextension="xls",
-            filetypes=[("Pliki arkusza", "*.xls"), ("Wszystkie pliki", "*.*")],
+            defaultextension=".txt",
+            filetypes=[("Pliki arkusza", "*.txt"), ("Wszystkie pliki", "*.*")],
         )
         with open(fileName, "w") as file:
-            file.write(output)
+            file.write(str(self.pure_info))
             print(f"dane zostały zapisane w plik {fileName}")
 
 
