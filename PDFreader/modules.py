@@ -110,7 +110,7 @@ class MyOrdersReader:
     def extracting_data(self, page):
         # szukanie daty PO i zmiana formatu z "dd. month po niemiecku yyyy" na 'dd.mm.yyyy'
         date_index = page.index("LIEFERTERMIN")
-
+        # zabezpieczenie, gdy nie jest podany LIEFERTERMIN, wówczas data z terminu zlecenia
         if page[date_index + 1] == "BEMERKUNG ZUM LIEFERTERMIN":
             date_index = page.index("AUFTRAG ERTEILT AM")
 
@@ -124,7 +124,10 @@ class MyOrdersReader:
         proj_value = []
         for el in page:
             if el.endswith("€"):
-                proj_value.append(float(el.removesuffix("€").replace(",", ".")))
+                proj_value.append(
+                    "{:.2f}".format(float(el.removesuffix("€").replace(",", ".")))
+                )
+                # proj_value.append(float(el.removesuffix("€").replace(",", ".")))
         return max(proj_value)
 
     def fileToSaveIn(self):
