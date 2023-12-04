@@ -46,7 +46,7 @@ class MyOrdersReader:
         self.btn3_save.pack()
 
         self.label_iter = Label(
-            root, text=f"Liczba przetworzonych plików: {self.iteration}"
+            root, text=f"Number of processed files: {self.iteration}"
         )
         self.label_iter.pack()
 
@@ -104,12 +104,9 @@ class MyOrdersReader:
 
             values_list.append(self.extracting_value(page))
 
-            self.label_iter.config(
-                text=f"Liczba przetworzonych plików: {self.iteration}"
-            )
+            self.label_iter.config(text=f"Number of processed files: {self.iteration}")
 
-            # self.root.update()
-            # self.root.update()
+        # sumowanie wartości wszystkich PO
         self.total = sum(float(x) for x in values_list)
         print(self.pure_info)
         return self.pure_info, self.total

@@ -1,10 +1,10 @@
-skryp do odczytu określonych wartości ze specyficznych plików PDF
+Program do pobieranie ze specyficznych plików PDF określonych informacji
 
-1. Wczytuje plik PDF
-2. Pobiera 1. stronę z pliku, ponieważ potrzebne wartości są na 1. stronie
-3. Konwersja na tekst
-4. Z uwagi na układ pliku PDF po konwersji tekst zawiera wiele znaków końca linii \n
-5. Utworzenie listy z podziałem '\n'
-6. Usunięcie pustych wartości z listy ' '.
-7. Szukanie indeksów dla słów kluczowych
-8. Następnie określanie na podstawie tych indeksów szukanych wartości przez dodanie do indeksów liczby 1 lub 2 (w przypadku klucza Honorar)
+1. Wczytuje z katalogu pliki PDF
+2. Pobiera z każdego pliku pierwszą stronę, ponieważ to na niej znajdują się wymagane wartości
+3. Konwertuje na tekst
+4. Tworzy listę, oczyszcza ze znaków podziału i pustych miejsc
+5. Wyszukiwanie słów kluczowych
+6. Następnie określanie szukanych wartości na podstawie indeksów słów kluczowych przez dodanie do indeksów liczby 1 lub 2 (w przypadku klucza 'Honorar')
+7. Tworzenie listy przy każdej iteracji z zebranymi informacjami (nr. projektu, nazwisko PM, data, wartość)
+8. Zapis listy list do pliku .txt
