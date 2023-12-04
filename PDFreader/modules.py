@@ -5,10 +5,8 @@ from tkinter import *
 from tkinter import filedialog
 import locale
 
+# zmiana ustawien na DE w celu przekonwertowania niemieckich nazw miesiecy na liczbe
 locale.setlocale(locale.LC_TIME, "de_DE")
-
-# import openpyxl
-# from openpyxl import Workbook
 
 
 class MyOrdersReader:
@@ -17,6 +15,8 @@ class MyOrdersReader:
         self.chosen_files = []
         self.list_pages = []
         self.pure_info = []
+        self.total = 0
+        self.iteration = 0
 
         self.btn_open = Button(
             root,
@@ -44,6 +44,11 @@ class MyOrdersReader:
             command=self.fileToSaveIn,
         )
         self.btn3_save.pack()
+
+        self.label_iter = Label(
+            root, text=f"Liczba przetworzonych plików: {self.iteration}"
+        )
+        self.label_iter.pack()
 
         self.btn4_exit = Button(
             root, text="Exit", bg="#EEE9BF", font=("Courier,15,bold"), command=exit
@@ -76,14 +81,16 @@ class MyOrdersReader:
 
             # usuwanie pustych elementow, aby bylo latwiej okreslac indeksy
             cleaned_list = [el.strip() for el in page_as_list if el.strip()]
-            print(cleaned_list)
 
             # dodwanie do listy oczyszczonych list
             self.list_pages.append(cleaned_list)
         return self.list_pages
 
     def converting(self):
+        values_list = []
+
         for page in self.list_pages:
+            self.iteration += 1
             temp_list = []
             results = [
                 self.extracting_num(page),
@@ -91,9 +98,21 @@ class MyOrdersReader:
                 self.extracting_data(page),
                 self.extracting_value(page),
             ]
+
             temp_list.extend(results)
             self.pure_info.append(temp_list)
-        return self.pure_info
+
+            values_list.append(self.extracting_value(page))
+
+            self.label_iter.config(
+                text=f"Liczba przetworzonych plików: {self.iteration}"
+            )
+
+            # self.root.update()
+            # self.root.update()
+        self.total = sum(float(x) for x in values_list)
+        print(self.pure_info)
+        return self.pure_info, self.total
 
     def extracting_pm(self, page):
         # szukanie nazwiska PM
@@ -110,7 +129,7 @@ class MyOrdersReader:
     def extracting_data(self, page):
         # szukanie daty PO i zmiana formatu z "dd. month po niemiecku yyyy" na 'dd.mm.yyyy'
         date_index = page.index("LIEFERTERMIN")
-        # zabezpieczenie, gdy nie jest podany LIEFERTERMIN, wówczas data z terminu zlecenia
+        # zabezpieczenie, gdy nie jest podany LIEFERTERMIN, wówczas data z terminu zlecenia (AUFTRAG ERTEILT AM)
         if page[date_index + 1] == "BEMERKUNG ZUM LIEFERTERMIN":
             date_index = page.index("AUFTRAG ERTEILT AM")
 
@@ -120,15 +139,22 @@ class MyOrdersReader:
         return projectDate
 
     def extracting_value(self, page):
-        # tworzy listę wartości z końcówką "€" i następnie wybiera z nich największą, która stanowi łączna wartość zamówienia"
-        proj_value = []
-        for el in page:
-            if el.endswith("€"):
-                proj_value.append(
-                    "{:.2f}".format(float(el.removesuffix("€").replace(",", ".")))
-                )
-                # proj_value.append(float(el.removesuffix("€").replace(",", ".")))
-        return max(proj_value)
+        # szukanie wartości Honorar, dwa miejsca za nią na liście jest podana kwota zamówienia
+        value_index = page.index("Honorar")
+        value_orig = page[value_index + 2]
+        # w niektórych plikach wymagana jest modyfikacja z powodu innego sposobu rozliczenia zamówienia PO
+        if page[value_index + 2] == "EINSATZ VON":
+            value_orig = page[value_index + 1]
+        # usunięcie znaku €, zmiana "," na ".", zmiana na liczbę zmiennoprzecinkową oraz formatowanie na  typ x.x0 (np. 45,50)
+        value = "{:.2f}".format(float(value_orig.removesuffix("€").replace(",", ".")))
+        return value
+
+    # sumowanie wartości wszystkich PO
+    # def valueTotal(self):
+    #     values_list = []
+    #     for page in self.list_pages:
+    #         values_list.append(self.extracting_value(page))
+    #     return sum(values_list)
 
     def fileToSaveIn(self):
         # wybór pliku do zapisu
@@ -137,7 +163,7 @@ class MyOrdersReader:
             filetypes=[("Pliki arkusza", "*.txt"), ("Wszystkie pliki", "*.*")],
         )
         with open(fileName, "w") as file:
-            file.write(str(self.pure_info))
+            file.write(str(self.pure_info) + "\n" + f"Suma:" + str(self.total))
             print(f"dane zostały zapisane w plik {fileName}")
 
 
