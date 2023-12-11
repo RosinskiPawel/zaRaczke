@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pandas as pd
+from datetime import datetime
 
 
 class SearchModul:
@@ -51,8 +52,6 @@ class SearchModul:
         self.canvas_widget.pack(side="top", padx=5, pady=5)
 
     def plot_chart(self):
-        # plt.plot([1, 2, 3, 4, 3, 2, 5, 3])
-        # plt.show()
         output_data, _ = self.exraction()
         _, output_value = self.exraction()
         data = {
@@ -86,12 +85,16 @@ class SearchModul:
     #         output_data.append((rate.get("effectiveDate"), rate.get("mid")))
     #     return output_data
     def exraction(self):
-        output_data = []
+        output_data_temp = []
         output_value = []
         currency_rates = self.requestInfo().get("rates")
         for rate in currency_rates:
-            output_data.append(rate.get("effectiveDate"))
+            output_data_temp.append(rate.get("effectiveDate"))
             output_value.append(rate.get("mid"))
+        output_data = [
+            datetime.strptime(el, "%Y-%m-%d").strftime("%y/%m/%d")
+            for el in output_data_temp
+        ]
         return output_data, output_value
 
 
