@@ -40,33 +40,33 @@ class SearchModul:
         self.btn1.pack(side="top", anchor="w", padx=5, pady=5)
 
         # proceed-button
-        self.btn2 = Button(root, text="Proceed", command=self.dataScraping)
+        self.btn2 = Button(root, text="Save in DB", command=self.writeToDB)
         self.btn2.pack(side="top", anchor="w", padx=5, pady=5)
 
-        self.plot_button = Button(root, text="Plot Chart", command=self.plot_chart)
-        self.plot_button.pack(side="top", padx=5, pady=10)
+        # self.plot_button = Button(root, text="Plot Chart", command=self.plot_chart)
+        # self.plot_button.pack(side="top", padx=5, pady=10)
 
-        # Matplotlib figure
-        self.figure = Figure(figsize=(10, 6), dpi=100)
-        self.ax = self.figure.add_subplot(111)
+        # # Matplotlib figure
+        # self.figure = Figure(figsize=(10, 6), dpi=100)
+        # self.ax = self.figure.add_subplot(111)
 
-        # Canvas to embed the Matplotlib figure in Tkinter
-        self.canvas = FigureCanvasTkAgg(self.figure, master=root)
-        self.canvas_widget = self.canvas.get_tk_widget()
-        self.canvas_widget.pack(side="top", padx=5, pady=5)
+        # # Canvas to embed the Matplotlib figure in Tkinter
+        # self.canvas = FigureCanvasTkAgg(self.figure, master=root)
+        # self.canvas_widget = self.canvas.get_tk_widget()
+        # self.canvas_widget.pack(side="top", padx=5, pady=5)
 
-    def plot_chart(self):
-        # dataScraping method returns two values
-        output_date, output_value = self.dataScraping()
+    # def plot_chart(self):
+    #     # dataScraping method returns two values
+    #     output_date, output_value = self.dataScraping()
 
-        data = {
-            "value": output_value,
-            "date": output_date,
-        }
-        df = pd.DataFrame(data)
-        df.plot(y="value", x="date", ax=self.ax, kind="line", legend=False)
+    #     data = {
+    #         "value": output_value,
+    #         "date": output_date,
+    #     }
+    #     df = pd.DataFrame(data)
+    #     df.plot(y="value", x="date", ax=self.ax, kind="line", legend=False)
 
-        self.canvas.draw()
+    #     self.canvas.draw()
 
     def get_inputs(self):
         self.currency_code = self.entry1.get()
@@ -94,23 +94,24 @@ class SearchModul:
         ]
         return output_date, output_value
 
-    # def dbEngine(self, entry1, output_value, output_date):
-    #     connection = sqlite3.connect("currencies_main.db")
-    #     cursor = connection.cursor()
-    #     create_table = (
-    #         "CREATE TABLE IF NOT EXISTS Currencies(Code TEXT, Date TEXT, Value TEXT);"
-    #     )
-    #     cursor.execute(create_table)
-    #     for i in range(len(self.output_value)):
-    #         insert_values = (
-    #             "INSERT INTO Currencies(Code, Date, Value) VALUES (?, ?, ?);"
-    #         )
-    #         cursor.execute(
-    #             insert_values, (self.entry1, self.output_value[i], self.output_date[i])
-    #         )
+    def writeToDB(self):
+        output_date1, output_value1 = self.dataScraping()
+        connection = sqlite3.connect("currencies_main.db")
+        cursor = connection.cursor()
+        create_table = (
+            "CREATE TABLE IF NOT EXISTS Currencies(Code TEXT, Date TEXT, Value TEXT);"
+        )
+        cursor.execute(create_table)
+        for i in range(len(output_value1)):
+            insert_values = (
+                "INSERT INTO Currencies(Code, Date, Value) VALUES (?, ?, ?);"
+            )
+            cursor.execute(
+                insert_values, (self.currency_code, output_value1[i], output_date1[i])
+            )
 
-    #     connection.commit()
-    #     connection.close()
+        connection.commit()
+        connection.close()
 
 
 def main():
