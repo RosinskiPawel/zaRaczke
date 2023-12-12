@@ -90,11 +90,46 @@ import sqlite3
 #             print(f"w dniu {c} euro kosztowało {el.get("mid")} PLN.")
 
 
-from datetime import datetime
+# from datetime import datetime
 
-d = ["2023-01-02", "2023-01-03", "2023-01-04"]
-# d2 = []
-# for x in d:
-#     d2.append(datetime.strptime(x, "%Y-%m-%d").strftime("%y/%m/%d"))
-d3 = [datetime.strptime(x, "%Y-%m-%d").strftime("%y/%m/%d") for x in d]
-print(d3)
+# d = ["2023-01-02", "2023-01-03", "2023-01-04"]
+# # d2 = []
+# # for x in d:
+# #     d2.append(datetime.strptime(x, "%Y-%m-%d").strftime("%y/%m/%d"))
+# d3 = [datetime.strptime(x, "%Y-%m-%d").strftime("%y/%m/%d") for x in d]
+# print(d3)
+
+import sqlite3
+
+# code = "EUR"
+# output_value = ["aa", "bb", "cc", "dd"]
+# output_date = ["0.0", "1.1", "2.2", "3.3"]
+
+
+def dbEngine():
+    code = input("EUR or USD")
+    output_value = ["aa", "bb", "cc", "dd"]
+    output_date = ["0.0", "1.1", "2.2", "3.3"]
+    connection = sqlite3.connect("currencies.db")
+    cursor = connection.cursor()
+    create_table = (
+        "CREATE TABLE IF NOT EXISTS Currencies(Code TEXT, Date TEXT, Value TEXT);"
+    )
+    cursor.execute(create_table)
+    for i in range(len(output_value)):
+        insert_values = "INSERT INTO Currencies(Code, Date, Value) VALUES (?, ?, ?);"
+        cursor.execute(insert_values, (code, output_value[i], output_date[i]))
+
+    connection.commit()
+    connection.close()
+
+
+# dbEngine()
+
+connection = sqlite3.connect("currencies.db")
+cursor = connection.cursor()
+query = "SELECT Date, Value FROM Currencies WHERE Code = 'USD';"
+cursor.execute(query)
+for row in cursor.fetchall():
+    print(row)
+connection.close()

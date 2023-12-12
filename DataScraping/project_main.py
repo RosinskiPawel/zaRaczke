@@ -39,11 +39,15 @@ class SearchModul:
         )
         self.btn1.pack(side="top", anchor="w", padx=5, pady=5)
 
+        # proceed-button
+        self.btn2 = Button(root, text="Proceed", command=self.dataScraping)
+        self.btn2.pack(side="top", anchor="w", padx=5, pady=5)
+
         self.plot_button = Button(root, text="Plot Chart", command=self.plot_chart)
         self.plot_button.pack(side="top", padx=5, pady=10)
 
         # Matplotlib figure
-        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.figure = Figure(figsize=(10, 6), dpi=100)
         self.ax = self.figure.add_subplot(111)
 
         # Canvas to embed the Matplotlib figure in Tkinter
@@ -52,11 +56,12 @@ class SearchModul:
         self.canvas_widget.pack(side="top", padx=5, pady=5)
 
     def plot_chart(self):
-        output_data, _ = self.exraction()
-        _, output_value = self.exraction()
+        # dataScraping method returns two values
+        output_date, output_value = self.dataScraping()
+
         data = {
             "value": output_value,
-            "date": output_data,
+            "date": output_date,
         }
         df = pd.DataFrame(data)
         df.plot(y="value", x="date", ax=self.ax, kind="line", legend=False)
@@ -65,42 +70,52 @@ class SearchModul:
 
     def get_inputs(self):
         self.currency_code = self.entry1.get()
-        self.startDate = self.entry2.get()
-        self.endDate = self.entry3.get()
+        self.start_date = self.entry2.get()
+        self.end_date = self.entry3.get()
 
     def requestInfo(self):
-        # self.currency_code = input("podaj kod waluty")
-        # self.startDate = input("podaj początek zakresu (rrrr-mm-dd)")
-        # self.endDate = input("podaj koniec zakresu (rrrr-mm-dd)")
-
-        url = f"http://api.nbp.pl/api/exchangerates/rates/A/{self.currency_code}/{self.startDate}/{self.endDate}/"
+        url = f"http://api.nbp.pl/api/exchangerates/rates/A/{self.currency_code}/{self.start_date}/{self.end_date}/"
         page = requests.get(url)
         all_date = page.json()
         return all_date
 
-    # def exraction(self):
-    #     output_data = []
-    #     currency_rates = self.requestInfo().get("rates")
-    #     for rate in currency_rates:
-    #         output_data.append((rate.get("effectiveDate"), rate.get("mid")))
-    #     return output_data
-    def exraction(self):
-        output_data_temp = []
+    def dataScraping(self):
+        output_date_temp = []
         output_value = []
+
         currency_rates = self.requestInfo().get("rates")
         for rate in currency_rates:
-            output_data_temp.append(rate.get("effectiveDate"))
+            output_date_temp.append(rate.get("effectiveDate"))
             output_value.append(rate.get("mid"))
-        output_data = [
+        # shorter date format
+        output_date = [
             datetime.strptime(el, "%Y-%m-%d").strftime("%y/%m/%d")
-            for el in output_data_temp
+            for el in output_date_temp
         ]
-        return output_data, output_value
+        return output_date, output_value
+
+    # def dbEngine(self, entry1, output_value, output_date):
+    #     connection = sqlite3.connect("currencies_main.db")
+    #     cursor = connection.cursor()
+    #     create_table = (
+    #         "CREATE TABLE IF NOT EXISTS Currencies(Code TEXT, Date TEXT, Value TEXT);"
+    #     )
+    #     cursor.execute(create_table)
+    #     for i in range(len(self.output_value)):
+    #         insert_values = (
+    #             "INSERT INTO Currencies(Code, Date, Value) VALUES (?, ?, ?);"
+    #         )
+    #         cursor.execute(
+    #             insert_values, (self.entry1, self.output_value[i], self.output_date[i])
+    #         )
+
+    #     connection.commit()
+    #     connection.close()
 
 
 def main():
     root = Tk()
-    root.geometry("800x600")
+    root.geometry("1000x800")
     root.resizable(True, True)
     root.title("Currency Analizer")
     app = SearchModul(root)
