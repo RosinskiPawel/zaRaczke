@@ -65,7 +65,7 @@ class SearchModul:
         self.canvas_widget.pack(side="top", padx=5, pady=5)
 
     def plot_chart(self):
-        # self.ax.clear()
+        self.ax.clear()
         dates_DB, values_DB = self.get_data_from_DB()
         values_DB = [float(value) for value in values_DB]
         data = {
@@ -79,9 +79,14 @@ class SearchModul:
 
     def get_inputs(self):
         self.currency_code = self.entry1.get()
-        print(self.currency_code)
         self.start_date = self.entry2.get()
         self.end_date = self.entry3.get()
+        self.clear_entries()
+
+    def clear_entries(self):
+        self.entry1.delete(0, "end")
+        self.entry2.delete(0, "end")
+        self.entry3.delete(0, "end")
 
     def request_info(self):
         url = f"http://api.nbp.pl/api/exchangerates/rates/a/{self.currency_code}/{self.start_date}/{self.end_date}/"
@@ -157,11 +162,6 @@ class SearchModul:
             self.close_BD_connection()
 
         return dates_from_DB, values_from_DB
-
-    # def clear_DB(self):
-    #     self.cursor.execute("DELETE FROM Currencies;")
-    #     self.connection.commit()
-    #     self.connection.close()
 
 
 def main():
