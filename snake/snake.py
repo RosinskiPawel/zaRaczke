@@ -124,15 +124,15 @@ ELEMENT_SIZE = 20
 
 position_snake = [400, 400]
 
-# snake_body = [pygame.Rect(400, 400, ELEMENT_SIZE, ELEMENT_SIZE),
-#               pygame.Rect(380, 400, ELEMENT_SIZE, ELEMENT_SIZE),
-#               pygame.Rect(360, 400, ELEMENT_SIZE, ELEMENT_SIZE),
-#               pygame.Rect(340, 400, ELEMENT_SIZE, ELEMENT_SIZE)]
+# snake_body = []
 
-snake_body = [
-    [400, 400], [380,400], [360, 400], [340,400]
+snake_body = [pygame.Rect(400, 400, ELEMENT_SIZE, ELEMENT_SIZE),
+              ]
+
+# snake_body = [
+#     [400, 400], [380,400], [360, 400], [340,400]
     
-]  # Lista przechowująca segmenty ciała węża
+# ]  # Lista przechowująca segmenty ciała węża
 direction = "right"
 position_in_box = BOARD_SIZE - ELEMENT_SIZE
 
@@ -142,14 +142,12 @@ class Food():
 
         self.y = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE)
         self.rect = pygame.Rect(self.x, self.y, ELEMENT_SIZE, ELEMENT_SIZE)
-        # self.image = pygame.Surface((ELEMENT_SIZE, ELEMENT_SIZE))
-        # self.image.fill("red")
-        # self.rect = self.image.get_rect()
+        
         
 
     def update(self):
-        pygame.draw.rect(screen, "red", self.rect) 
-        # screen.blit(self.image, self.rect) 
+        pygame.draw.rect(screen, "red", self.rect)
+         
         
 
 food = Food()
@@ -190,7 +188,10 @@ while True:
         position_snake[1] += 10
     if direction == "left":
         position_snake[0] -= 10
-            
+    
+    
+    
+           
     # Dodawanie nowego segmentu ciała na przód węża
     # new_head = [position_snake[0], position_snake[1]]
     # snake_body.append(new_head)
@@ -198,50 +199,51 @@ while True:
     new_head = pygame.Rect(position_snake[0], position_snake[1], ELEMENT_SIZE, ELEMENT_SIZE)
     snake_body.append(new_head)
     
+    # if snake_body[0] in snake_body[1:]:
+    #     print("Ugryzienie ogona!")
     
     for i in range(len(snake_body) - 1):
         snake_body[i][0] = snake_body[i + 1][0]
         snake_body[i][1] = snake_body[i + 1][1]
     snake_body.pop()
-
-    
-
-    
     
     
     screen.fill("Black")
     
-    # snake_body.insert(0, new_head)
-    
-    # pygame.draw.rect(screen, snake_color, pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))
+ 
     # Rysowanie wszystkich segmentów ciała węża
     for segment in snake_body:
         pygame.draw.rect(
             screen,
-            snake_color, 
-            pygame.Rect(segment[0], segment[1], ELEMENT_SIZE, ELEMENT_SIZE),
+            snake_color, segment
         )
     
+        for snakesegment in snake_body[:-2]:
+            if position_snake[0]  == snakesegment[0] and position_snake[1] == snakesegment[1]:
+                print("AUUUUUU")
+    
+        
     food.update()
-    
-     
-    
-    # if new_head.colliderect(food.rect):
-    #     print("Hit!")
-    #     snake_body.append(pygame.Rect(snake_body[-1][0], snake_body[-1][1], ELEMENT_SIZE, ELEMENT_SIZE))
-    #     print(len(snake_body))
-    #     food = Food()
 
     if new_head.colliderect(food.rect):
-        
-        print("Hit!")
-        for _ in range(3):
-            snake_body.append(pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))  
-        
-        
-        print(len(snake_body))
-         
+        snake_body.append(pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))
+            # print(snake_body[0])
+        print(snake_body.index(new_head))
+        print(f"dłgość {len(snake_body)}")   
+        # for i in range(len(snake_body)-1):
+        #     print(i, snake_body[i])   
+        print(f"pierwszy el {snake_body[0]}")
+        # print(food.rect)
+        print(f"nowa głowa {new_head}")
+        print(f"cały waz {snake_body}")
+        print(f"position_snake {position_snake}")
+       
         food = Food()
     
+    #wyjście poza ramkę
+    if new_head[0] not in range(0,BOARD_SIZE) or new_head[1] not in range(0,BOARD_SIZE):
+        print("OUT!!! ") 
+    
+            
     pygame.display.update()
-    clock.tick(15)
+    clock.tick(10)
