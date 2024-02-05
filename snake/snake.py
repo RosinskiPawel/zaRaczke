@@ -122,7 +122,7 @@ text_font = pygame.font.SysFont("Arial", 40)
 snake_color = "blue"
 ELEMENT_SIZE = 20
 
-position_snake = [400, 400]
+head_position = [400, 400]
 
 # snake_body = []
 
@@ -181,26 +181,22 @@ while True:
                 direction = "left"
     #animacja ruchu             
     if direction == "right":
-        position_snake[0] += 10
+        head_position[0] += 10
     if direction == "up":
-        position_snake[1] -= 10
+        head_position[1] -= 10
     if direction == "down":
-        position_snake[1] += 10
+        head_position[1] += 10
     if direction == "left":
-        position_snake[0] -= 10
+        head_position[0] -= 10
     
     
     
            
-    # Dodawanie nowego segmentu ciała na przód węża
-    # new_head = [position_snake[0], position_snake[1]]
-    # snake_body.append(new_head)
-    # new_head_rect = pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE)
-    new_head = pygame.Rect(position_snake[0], position_snake[1], ELEMENT_SIZE, ELEMENT_SIZE)
+    
+    new_head = pygame.Rect(head_position[0], head_position[1], ELEMENT_SIZE, ELEMENT_SIZE)
     snake_body.append(new_head)
     
-    # if snake_body[0] in snake_body[1:]:
-    #     print("Ugryzienie ogona!")
+   
     
     for i in range(len(snake_body) - 1):
         snake_body[i][0] = snake_body[i + 1][0]
@@ -219,12 +215,14 @@ while True:
         )
     
         for snakesegment in snake_body[:-2]:
-            if position_snake[0]  == snakesegment[0] and position_snake[1] == snakesegment[1]:
+            if head_position[0]  == snakesegment[0] and head_position[1] == snakesegment[1]:
                 print("AUUUUUU")
     
         
     food.update()
-
+    #jedzenie
+    
+     
     if new_head.colliderect(food.rect):
         snake_body.append(pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))
             # print(snake_body[0])
@@ -236,13 +234,18 @@ while True:
         # print(food.rect)
         print(f"nowa głowa {new_head}")
         print(f"cały waz {snake_body}")
-        print(f"position_snake {position_snake}")
+        print(f"head_position {head_position}")
        
         food = Food()
     
     #wyjście poza ramkę
-    if new_head[0] not in range(0,BOARD_SIZE) or new_head[1] not in range(0,BOARD_SIZE):
+    
+    if head_position[0] not in range(0,BOARD_SIZE) or head_position[1] not in range(0,BOARD_SIZE):
         print("OUT!!! ") 
+    
+    
+    # if new_head[0] not in range(0,BOARD_SIZE) or new_head[1] not in range(0,BOARD_SIZE):
+    #     print("OUT!!! ") 
     
             
     pygame.display.update()
