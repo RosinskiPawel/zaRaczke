@@ -114,41 +114,55 @@ import random
 pygame.init()
 
 BOARD_SIZE = 600
-
+BOARD_COLOR="grey"
 screen = pygame.display.set_mode((BOARD_SIZE, BOARD_SIZE))
-screen.fill("Black")
+screen.fill(BOARD_COLOR)
 clock = pygame.time.Clock()
 text_font = pygame.font.SysFont("Arial", 40)
 snake_color = "blue"
-ELEMENT_SIZE = 20
+ELEMENT_SIZE = 40
 
+#pozycja glowy weza
 head_position = [400, 400]
 
-# snake_body = []
-
-snake_body = [pygame.Rect(400, 400, ELEMENT_SIZE, ELEMENT_SIZE),
-              ]
-
-# snake_body = [
-#     [400, 400], [380,400], [360, 400], [340,400]
-    
-# ]  # Lista przechowująca segmenty ciała węża
+# lista segmentów ciała węża
+snake_body = [pygame.Rect(400, 400, ELEMENT_SIZE, ELEMENT_SIZE)]
+#zadany kierunek 
 direction = "right"
-position_in_box = BOARD_SIZE - ELEMENT_SIZE
+# position_in_box = BOARD_SIZE - ELEMENT_SIZE
+
+def drawGrid():
+    for x in range(0, BOARD_SIZE, ELEMENT_SIZE):
+        for y in range(0, BOARD_SIZE, ELEMENT_SIZE):
+            rect = pygame.Rect(x, y, ELEMENT_SIZE, ELEMENT_SIZE)
+            pygame.draw.rect(screen, "red", rect, 1)
+
 
 class Food():
     def __init__(self):
-        self.x = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE)
+        #randomowa pozycja w zakresie 0 do krawedzi - rozmiar elementu i dodatkowo krok wielkości elementu, aby food miescił się w kratce
+        self.x = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
 
-        self.y = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE)
+        self.y = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
         self.rect = pygame.Rect(self.x, self.y, ELEMENT_SIZE, ELEMENT_SIZE)
-        
-        
 
-    def update(self):
+    def new_position (self):
         pygame.draw.rect(screen, "red", self.rect)
          
-        
+
+class Snake():
+    def __init__(self):   
+        self.direction = "right"
+        self.snake_body = [pygame.Rect(head_position[0], head_position[1], ELEMENT_SIZE, ELEMENT_SIZE)]
+        self.new_head = pygame.Rect(head_position[0], head_position[1], ELEMENT_SIZE, ELEMENT_SIZE)
+    
+    def move(self):
+        self.snake_body.append(self.new_head)
+        for i in range(len(self.snake_body) - 1):
+            self.snake_body[i][0] = self.snake_body[i + 1][0]
+            self.snake_body[i][1] = self.snake_body[i + 1][1]
+        self.snake_body.pop()
+                        
 
 food = Food()
 
@@ -181,31 +195,31 @@ while True:
                 direction = "left"
     #animacja ruchu             
     if direction == "right":
-        head_position[0] += 10
+        head_position[0] += ELEMENT_SIZE
     if direction == "up":
-        head_position[1] -= 10
+        head_position[1] -= ELEMENT_SIZE
     if direction == "down":
-        head_position[1] += 10
+        head_position[1] += ELEMENT_SIZE
     if direction == "left":
-        head_position[0] -= 10
+        head_position[0] -= ELEMENT_SIZE
     
     
     
            
-    
+    #dodawanie nowej głowy na pozycji glowy
     new_head = pygame.Rect(head_position[0], head_position[1], ELEMENT_SIZE, ELEMENT_SIZE)
     snake_body.append(new_head)
     
    
-    
+    #ruch weza
     for i in range(len(snake_body) - 1):
         snake_body[i][0] = snake_body[i + 1][0]
         snake_body[i][1] = snake_body[i + 1][1]
     snake_body.pop()
     
     
-    screen.fill("Black")
-    
+    screen.fill(BOARD_COLOR)
+    drawGrid()
  
     # Rysowanie wszystkich segmentów ciała węża
     for segment in snake_body:
@@ -219,7 +233,7 @@ while True:
                 print("AUUUUUU")
     
         
-    food.update()
+    food.new_position()
     #jedzenie
     
      
@@ -249,4 +263,4 @@ while True:
     
             
     pygame.display.update()
-    clock.tick(10)
+    clock.tick(5)
