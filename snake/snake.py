@@ -108,7 +108,7 @@
 
 import pygame
 from sys import exit
-
+import time
 import random
 
 pygame.init()
@@ -143,14 +143,16 @@ def drawGrid():
 class Food():
     def __init__(self):
         #randomowa pozycja w zakresie 0 do krawedzi - rozmiar elementu i dodatkowo krok wielkości elementu, aby food miescił się w kratce
+        
         self.x = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
 
         self.y = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
         self.rect = pygame.Rect(self.x, self.y, ELEMENT_SIZE, ELEMENT_SIZE)
-
-    def new_position (self):
+        
+            
+    def random_position (self):
         pygame.draw.rect(screen, "red", self.rect)
-         
+
 
 class Snake():
     def __init__(self):   
@@ -167,7 +169,7 @@ class Snake():
                         
 
 food = Food()
-
+# food = Futter()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -217,8 +219,9 @@ while True:
     for i in range(len(snake_body) - 1):
         snake_body[i][0] = snake_body[i + 1][0]
         snake_body[i][1] = snake_body[i + 1][1]
+        
     snake_body.pop()
-    
+     
     
     screen.fill(BOARD_COLOR)
     drawGrid()
@@ -230,40 +233,48 @@ while True:
             snake_color, segment
         )
     
-        for snakesegment in snake_body[:-2]:
-            if head_position[0]  == snakesegment[0] and head_position[1] == snakesegment[1]:
-                print("AUUUUUU")
-    
+    for snakesegment in snake_body[:-2]:
+        if head_position[0]  == snakesegment[0] and head_position[1] == snakesegment[1]:
+            print("AUUUUUU")
+            #koniec gry z powodu ugryzienia w ogon
+            text2 = text_font.render("GAME OVER", True, "Black")
+            screen.blit(text2, (BOARD_SIZE//2-text2.get_width()//2, 200))
+            pygame.display.update()
+            time.sleep(2)
+            exit()
         
-    food.new_position()
-    #jedzenie
+    food.random_position()
+     
+    
     
     text = text_font.render(f"{counter}", True, text_color)
     screen.blit(text, (BOARD_SIZE//2-text.get_width()//2, 0))
+    
+    #jedzenie
     if new_head.colliderect(food.rect):
         snake_body.append(pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))
-            # print(snake_body[0])
-        print(snake_body.index(new_head))
-        print(f"dłgość {len(snake_body)}")   
-        # for i in range(len(snake_body)-1):
-        #     print(i, snake_body[i])   
-        print(f"pierwszy el {snake_body[0]}")
-        # print(food.rect)
-        print(f"nowa głowa {new_head}")
-        print(f"cały waz {snake_body}")
-        print(f"head_position {head_position}")
+        
+        #print(snake_body)
+        
         counter+=1
-        food = Food()
-    
+        #zapobieganie pojawieniu sie jedzenia na wezu
+        while True:    
+            food = Food()
+            if food.rect not in snake_body:
+                break
+            
     #wyjście poza ramkę
-    
     if head_position[0] not in range(0,BOARD_SIZE) or head_position[1] not in range(0,BOARD_SIZE):
         print("OUT!!! ") 
+        #koniec gry z powodu wyjścia poza obszar
+        text2 = text_font.render("GAME OVER", True, "Black")
+        screen.blit(text2, (BOARD_SIZE//2-text2.get_width()//2, 200))
+        pygame.display.update()
+        time.sleep(2)
+        exit()
     
-    
-    # if new_head[0] not in range(0,BOARD_SIZE) or new_head[1] not in range(0,BOARD_SIZE):
-    #     print("OUT!!! ") 
     
             
     pygame.display.update()
+    
     clock.tick(5)
