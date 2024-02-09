@@ -114,13 +114,16 @@ import random
 pygame.init()
 
 BOARD_SIZE = 600
+ELEMENT_SIZE = 40
 BOARD_COLOR="grey"
 screen = pygame.display.set_mode((BOARD_SIZE, BOARD_SIZE))
 screen.fill(BOARD_COLOR)
 clock = pygame.time.Clock()
-text_font = pygame.font.SysFont("Arial", 40)
+text_font = pygame.font.SysFont("Bradley Hand ITC", 100)
+text_color = " White"
+pygame.display.set_caption("SNAKE")
 snake_color = "blue"
-ELEMENT_SIZE = 40
+counter = 0
 
 #pozycja glowy weza
 head_position = [400, 400]
@@ -129,7 +132,6 @@ head_position = [400, 400]
 snake_body = [pygame.Rect(400, 400, ELEMENT_SIZE, ELEMENT_SIZE)]
 #zadany kierunek 
 direction = "right"
-# position_in_box = BOARD_SIZE - ELEMENT_SIZE
 
 def drawGrid():
     for x in range(0, BOARD_SIZE, ELEMENT_SIZE):
@@ -220,7 +222,7 @@ while True:
     
     screen.fill(BOARD_COLOR)
     drawGrid()
- 
+    
     # Rysowanie wszystkich segmentów ciała węża
     for segment in snake_body:
         pygame.draw.rect(
@@ -236,7 +238,8 @@ while True:
     food.new_position()
     #jedzenie
     
-     
+    text = text_font.render(f"{counter}", True, text_color)
+    screen.blit(text, (BOARD_SIZE//2-text.get_width()//2, 0))
     if new_head.colliderect(food.rect):
         snake_body.append(pygame.Rect(new_head[0], new_head[1], ELEMENT_SIZE, ELEMENT_SIZE))
             # print(snake_body[0])
@@ -249,7 +252,7 @@ while True:
         print(f"nowa głowa {new_head}")
         print(f"cały waz {snake_body}")
         print(f"head_position {head_position}")
-       
+        counter+=1
         food = Food()
     
     #wyjście poza ramkę
