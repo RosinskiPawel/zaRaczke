@@ -170,6 +170,7 @@ class Snake():
 
 food = Food()
 # food = Futter()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -179,7 +180,7 @@ while True:
         if event.type == pygame.KEYDOWN:
             # warunek 'direction !=' zabezpiecza weza przed odwrócneiem się i zjedzeniem ogona
             if event.key == pygame.K_DOWN and direction != "up":
-                
+                #to przerobić na metode
                 snake_color = tuple(random.sample(range(256), 3))
                 direction = "down"
                 
@@ -209,19 +210,19 @@ while True:
     
     
     
-           
+        
     #dodawanie nowej głowy na pozycji glowy
     new_head = pygame.Rect(head_position[0], head_position[1], ELEMENT_SIZE, ELEMENT_SIZE)
     snake_body.append(new_head)
     
-   
+
     #ruch weza
     for i in range(len(snake_body) - 1):
         snake_body[i][0] = snake_body[i + 1][0]
         snake_body[i][1] = snake_body[i + 1][1]
         
     snake_body.pop()
-     
+    
     
     screen.fill(BOARD_COLOR)
     drawGrid()
@@ -244,7 +245,7 @@ while True:
             exit()
         
     food.random_position()
-     
+    
     
     
     text = text_font.render(f"{counter}", True, text_color)
@@ -272,9 +273,8 @@ while True:
         pygame.display.update()
         time.sleep(2)
         exit()
-    
-    
-            
+        
+        
     pygame.display.update()
     
     clock.tick(5)
