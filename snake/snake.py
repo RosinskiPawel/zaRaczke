@@ -28,8 +28,6 @@ text_color = "White"
 pygame.display.set_caption("SNAKE")
  
 
-
-
 class Snake:
     def __init__(self):
         self.color = "White"
@@ -64,8 +62,7 @@ class Snake:
         screen.blit(text_points, (BOARD_SIZE // 2 - text_points.get_width() // 2, 250))
         pygame.display.update()
         time.sleep(2)
-        exit()
-    
+        exit()   
                        
     # collision if snake's head in snake's body list
     def collision_body(self):
@@ -76,13 +73,14 @@ class Snake:
             ):
                 self.gameOver()
                                
-
     # head out of game's board
     def out_of_window(self):
         if snake.head_position[0] not in range(0, BOARD_SIZE+ELEMENT_SIZE) or snake.head_position[
             1
         ] not in range(0, BOARD_SIZE+ELEMENT_SIZE):
             self.gameOver()
+
+
 class Food:
     def __init__(self):
         # randomowa pozycja w zakresie 0 do krawedzi - rozmiar elementu i dodatkowo krok wielkości elementu, aby food miescił się w kratce
