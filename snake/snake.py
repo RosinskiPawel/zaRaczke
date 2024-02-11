@@ -8,21 +8,25 @@ pygame.init()
 
 BOARD_SIZE = 600
 ELEMENT_SIZE = 40
-GROUND_COLOR = "Grey"
+GROUND_COLOR = "Black"
+END_TEXT_COLOR = "White"
+NEON_COLORS = [
+    (255, 0, 0),
+    (255, 172, 0),
+    (11, 255, 0),
+    (77, 238, 234),
+    (116, 238, 21),
+    (255, 231, 0),
+    (240, 0, 255),
+    (0, 30, 255),
+]
 screen = pygame.display.set_mode((BOARD_SIZE, BOARD_SIZE))
 screen.fill(GROUND_COLOR)
 clock = pygame.time.Clock()
 text_font = pygame.font.SysFont("Bradley Hand ITC", 100)
 text_color = "White"
 pygame.display.set_caption("SNAKE")
-# counter = 0
-
-
-def drawGrid():
-    for x in range(0, BOARD_SIZE, ELEMENT_SIZE):
-        for y in range(0, BOARD_SIZE, ELEMENT_SIZE):
-            rect = pygame.Rect(x, y, ELEMENT_SIZE, ELEMENT_SIZE)
-            pygame.draw.rect(screen, "red", rect, 1)
+ 
 
 
 class Food:
@@ -32,16 +36,17 @@ class Food:
         self.x = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
         self.y = random.randrange(0, BOARD_SIZE - ELEMENT_SIZE, ELEMENT_SIZE)
         self.rect = pygame.Rect(self.x, self.y, ELEMENT_SIZE, ELEMENT_SIZE)
+        self.color = random.choice(NEON_COLORS)
 
     def random_position(self):
-        pygame.draw.rect(screen, "red", self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 5)
 
 
 class Snake:
     def __init__(self):
-        self.color = "blue"
+        self.color = "White"
         self.direction = "right"
-        self.head_position = [400, 400]
+        self.head_position = [280, 280]
         self.body = [
             pygame.Rect(
                 self.head_position[0], self.head_position[1], ELEMENT_SIZE, ELEMENT_SIZE
@@ -62,11 +67,13 @@ class Snake:
     # draw all snake's segments
     def draw(self):
         for segment in self.body:
-            pygame.draw.rect(screen, self.color, segment)
+            pygame.draw.rect(screen, self.color, segment, 5)
 
     def gameOver(self):
-        text2 = text_font.render("GAME OVER", True, "Black")
+        text2 = text_font.render("GAME OVER", True, END_TEXT_COLOR)
         screen.blit(text2, (BOARD_SIZE // 2 - text2.get_width() // 2, 200))
+        text_points = text_font.render(f"Points: {counter}", True, END_TEXT_COLOR)
+        screen.blit(text_points, (BOARD_SIZE // 2 - text_points.get_width() // 2, 250))
         pygame.display.update()
         time.sleep(2)
         exit()
@@ -103,18 +110,14 @@ while True:
             if event.type == pygame.KEYDOWN:
                 # warunek 'direction !=' zabezpiecza weza przed odwrócneiem się i zjedzeniem ogona
                 if event.key == pygame.K_DOWN and snake.direction != "up":
-                    # to przerobić na metode
-                    snake.color = tuple(random.sample(range(256), 3))
                     snake.direction = "down"
                 elif event.key == pygame.K_UP and snake.direction != "down":
-                    snake.color = tuple(random.sample(range(256), 3))
                     snake.direction = "up"
                 elif event.key == pygame.K_RIGHT and snake.direction != "left":
-                    snake.color = tuple(random.sample(range(256), 3))
                     snake.direction = "right"
                 elif event.key == pygame.K_LEFT and snake.direction != "right":
-                    snake.color = tuple(random.sample(range(256), 3))
                     snake.direction = "left"
+                    
         # animacja ruchu
         if snake.direction == "right":
             snake.head_position[0] += ELEMENT_SIZE
@@ -126,18 +129,17 @@ while True:
             snake.head_position[0] -= ELEMENT_SIZE
 
         screen.fill(GROUND_COLOR)
-        drawGrid()
         snake.move()
         snake.draw()
         snake.collision_body()
         snake.out_of_window()
         food.random_position()
-
         text = text_font.render(f"{counter}", True, text_color)
         screen.blit(text, (BOARD_SIZE // 2 - text.get_width() // 2, 0))
 
         # eating
         if snake.new_head.colliderect(food.rect):
+            snake.color = food.color
             snake.body.append(
                 pygame.Rect(
                     snake.new_head[0], snake.new_head[1], ELEMENT_SIZE, ELEMENT_SIZE
