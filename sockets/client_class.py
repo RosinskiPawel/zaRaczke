@@ -49,6 +49,7 @@ first.client_intro()
 
 # while True:
 #     first.client_cmd()
+
 while first.running:
     first.client_cmd()
 first.client_socket.close()

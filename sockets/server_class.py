@@ -45,7 +45,7 @@ class Server():
         return self.json_fnc_list
      
     
-    def handle_commands(self):        
+    def handle_client_cmd(self):        
         self.client_socket, self.adress = self.server_socket.accept()
         print(f"Connection from IP: {self.adress[0]}, port: {self.adress[1]}")        
         
@@ -53,7 +53,7 @@ class Server():
         
         print(f"User name: {name}")
         
-        msg = f"Hello {name} on my server with IP {self.adress[0]}".encode("utf-8")
+        msg = f"Welcome {name} to my server with IP {self.adress[0]}".encode("utf-8")
         self.client_socket.send(msg)
         
         command = self.client_socket.recv(self.BUFFER).decode("utf-8")
@@ -69,7 +69,7 @@ class Server():
             elif chosen_command == 'info':
                 self.client_socket.send(self.server_info().encode("utf-8"))
             elif chosen_command == 'stop':
-                self.client_socket.send("Stopping server...".encode("utf-8"))
+                self.client_socket.send("Disconnecting...".encode("utf-8"))
                 self.stop_client_conn()
                 self.server_stop()
                 break
@@ -82,7 +82,7 @@ one = Server()
 one.setup_connection()
 
 while one.running:    
-    one.handle_commands()
+    one.handle_client_cmd()
      
 one.server_socket.close()         
     
