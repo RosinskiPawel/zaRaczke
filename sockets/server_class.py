@@ -7,12 +7,14 @@ class Server():
         self.HOST = '127.0.0.1'
         self.PORT = 65431
         self.BUFFER = 1024
+        self.running = True
         
     def setup_connection(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.  SOCK_STREAM)
         self.server_socket.bind((self.HOST, self.PORT))
         self.server_socket.listen()
         self.start_time = time.time()
+    
     
     def server_uptime(self):
         self.current_time = time.time()
@@ -26,11 +28,16 @@ class Server():
         self.json_version = json.dumps(self.version)
         return self.json_version
     
+    # def server_stop(self):        
+    #     self.client_socket.close()
+    #     self.server_socket.close()
+    
     def server_stop(self):
+        self.running = False
         
+    def stop_client_conn(self):
         self.client_socket.close()
-        self.server_socket.close()
-         
+            
         
     def server_help(self):
         self.fnc_list = {"UPTIME" : "Server uptime", "INFO" : "Version number" , "STOP" : "Close the connection", "HELP" : "List of functions"}
@@ -52,7 +59,7 @@ class Server():
         command = self.client_socket.recv(self.BUFFER).decode("utf-8")
         if command == 'help':
             self.client_socket.send(self.server_help().encode("utf-8"))
-        while True:
+        while self.running:
             chosen_command = self.client_socket.recv(self.BUFFER).decode("utf-8").strip()
             
             if chosen_command == 'help':
@@ -63,18 +70,19 @@ class Server():
                 self.client_socket.send(self.server_info().encode("utf-8"))
             elif chosen_command == 'stop':
                 self.client_socket.send("Stopping server...".encode("utf-8"))
+                self.stop_client_conn()
                 self.server_stop()
                 break
            
-            
+           
         
         
         
 one = Server()
 one.setup_connection()
 
-while True:    
+while one.running:    
     one.handle_commands()
      
-        
+one.server_socket.close()         
     

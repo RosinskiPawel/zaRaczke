@@ -34,6 +34,8 @@ class Client():
                 break
         self.client_socket.send(chosen_command.encode("utf-8"))
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
+        
+            
             
 
 first = Client()
