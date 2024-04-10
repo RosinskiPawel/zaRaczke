@@ -25,9 +25,14 @@ class Client():
         self.client_socket.send(command.encode("utf-8"))
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
     
-    def client_cmd(self):                
-        chosen_command = input("Enter command: ").lower().encode("utf-8")
-        self.client_socket.send(chosen_command)
+    def client_cmd(self):
+        cmd_pool = ['info', 'uptime', 'stop', 'help']
+        
+        while True:                           
+            chosen_command = input("Enter one command: ").lower()
+            if chosen_command in cmd_pool:
+                break
+        self.client_socket.send(chosen_command.encode("utf-8"))
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
             
 

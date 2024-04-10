@@ -17,7 +17,7 @@ class Server():
     def server_uptime(self):
         self.current_time = time.time()
         self.uptime = self.current_time - self.start_time
-        self.data = {"Life time in seconds" : round(self.uptime, 2)}
+        self.data = {"Uptime in seconds" : round(self.uptime, 2)}
         self.json_data = json.dumps(self.data)
         return self.json_data
     
@@ -33,7 +33,7 @@ class Server():
          
         
     def server_help(self):
-        self.fnc_list = {"UPTIME" : "Server's life time", "INFO" : "version number" , "STOP" : "close the connection", "HELP" : "list of functions"}
+        self.fnc_list = {"UPTIME" : "Server uptime", "INFO" : "Version number" , "STOP" : "Close the connection", "HELP" : "List of functions"}
         self.json_fnc_list = json.dumps(self.fnc_list)
         return self.json_fnc_list
      
@@ -65,11 +65,7 @@ class Server():
                 self.client_socket.send("Stopping server...".encode("utf-8"))
                 self.server_stop()
                 break
-            elif chosen_command == '':
-                print("No command received, closing connection.")
-                self.client_socket.send("No command entered, disconnecting.".encode("utf-8"))
-                break 
-
+           
             
         
         
