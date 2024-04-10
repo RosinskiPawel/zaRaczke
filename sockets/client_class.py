@@ -17,18 +17,15 @@ class Client():
         self.client_socket.send(name)
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
 
-        # command = input("Enter HELP to see my functions: ").encode("utf-8")
         while True:
             command = input("Enter HELP to see my functions: ").lower()
-            if command == 'help':
-                
+            if command == 'help':                
                 break
             
         self.client_socket.send(command.encode("utf-8"))
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
     
-    def client_cmd(self):
-                
+    def client_cmd(self):                
         chosen_command = input("Enter command: ").lower().encode("utf-8")
         self.client_socket.send(chosen_command)
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))

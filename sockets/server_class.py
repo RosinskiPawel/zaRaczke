@@ -46,7 +46,7 @@ class Server():
         
         print(f"User name: {name}")
         
-        msg = f"witaj {name} na moim serwerze o nr IP {self.adress[0]}".encode("utf-8")
+        msg = f"Hello {name} on my server with IP {self.adress[0]}".encode("utf-8")
         self.client_socket.send(msg)
         
         command = self.client_socket.recv(self.BUFFER).decode("utf-8")
@@ -68,7 +68,7 @@ class Server():
             elif chosen_command == '':
                 print("No command received, closing connection.")
                 self.client_socket.send("No command entered, disconnecting.".encode("utf-8"))
-                break  # Wyjście z pętli i zakończenie połączenia z tym klientem
+                break 
 
             
         
