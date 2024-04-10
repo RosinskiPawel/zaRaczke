@@ -6,6 +6,7 @@ class Client():
         self.HOST = '127.0.0.1'
         self.PORT = 65431
         self.BUFFER = 1024
+        self.running = True
         
     def setup_connection(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,17 +35,24 @@ class Client():
                 break
         self.client_socket.send(chosen_command.encode("utf-8"))
         print(self.client_socket.recv(self.BUFFER).decode("utf-8"))
+        if chosen_command == 'stop':
+            self.client_stop()
         
-            
+    def client_stop(self):
+        self.running = False
+      
             
 
 first = Client()
 first.setup_connection()
 first.client_intro()
 
-while True:
+# while True:
+#     first.client_cmd()
+while first.running:
     first.client_cmd()
-    
+first.client_socket.close()
+
 
         
 
