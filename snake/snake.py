@@ -28,7 +28,7 @@ text_color = "White"
 pygame.display.set_caption("SNAKE")
  
 
-class Snake:
+class Snake():
     def __init__(self):
         self.color = "White"
         self.direction = "right"
